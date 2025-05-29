@@ -1,6 +1,7 @@
 const express = require('express'); 
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const sequelize = require('./config/database');  
@@ -9,12 +10,20 @@ const userRoutes = require('./routes/UserRoute');
 const cartRoutes = require('./routes/cartRoute');
 const orderRoutes = require('./routes/orderRoute');
 
-const app = express();
+const app = express();  // déclaration de app ici
 
 app.use(cors());
 app.use(bodyParser.json());
 
-// Routes
+// Servir les fichiers statiques dans /public
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Route pour afficher la page HTML principale
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
+
+// Routes API
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/carts', cartRoutes);
